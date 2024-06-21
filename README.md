@@ -33,7 +33,7 @@
 
 ## Usage
 ### Main Program
-You can adjust the main program to train whatever model you want using any inputs and outputs. To run the main program, use the following command:
+To run the main program, use the following command:
 ```sh 
 python main.py
 ```
