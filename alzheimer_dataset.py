@@ -1,8 +1,5 @@
 import os
-import numpy as np
-import torch
-from torchvision import transforms
-from torch.utils.data import DataLoader, Dataset
+from torch.utils.data import Dataset
 from PIL import Image
 
 class AlzheimerDataset(Dataset):
@@ -12,7 +9,7 @@ class AlzheimerDataset(Dataset):
         self.image_paths = []
         self.labels = []
         
-        # Mapear as pastas para os labels
+        # Map folders to labels
         self.label_map = {
             'non-demented': 0,
             'mild-demented': 1,
@@ -20,12 +17,12 @@ class AlzheimerDataset(Dataset):
             'very-mild-demented': 3
         }
 
-        # Coletar todos os caminhos de imagem e seus respectivos labels
+        # Collect all image paths and their respective labels
         for label_name, label_idx in self.label_map.items():
             label_dir = os.path.join(data_dir, label_name)
             for img_name in os.listdir(label_dir):
                 img_path = os.path.join(label_dir, img_name)
-                if os.path.isfile(img_path):  # Verifica se é um arquivo
+                if os.path.isfile(img_path): # Check if it is a file
                     self.image_paths.append(img_path)
                     self.labels.append(label_idx)
     
@@ -34,7 +31,7 @@ class AlzheimerDataset(Dataset):
     
     def __getitem__(self, idx):
         img_path = self.image_paths[idx]
-        image = Image.open(img_path).convert('L')
+        image = Image.open(img_path).convert('L') # Convert to grayscale
         label = self.labels[idx]
         if self.transform:
             image = self.transform(image)

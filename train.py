@@ -17,7 +17,7 @@ def train_model(device, model, train_loader, val_loader, criterion, optimizer, n
         epoch_loss = running_loss / len(train_loader.dataset)
         print(f'Epoch {epoch+1}/{num_epochs}, Loss: {epoch_loss:.4f}')
         
-        # Validação
+        # Validation
         model.eval()
         val_running_loss = 0.0
         correct = 0
