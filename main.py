@@ -4,7 +4,8 @@ from torch.utils.data import DataLoader
 import torch.nn as nn
 
 from alzheimer_dataset import AlzheimerDataset
-from cnn import CNN
+from simple_cnn import SimpleCNN
+from advanced_cnn import AdvancedCNN
 from train import train_model
 from test import test_model
 
@@ -31,7 +32,7 @@ if __name__ == '__main__':
     val_loader = DataLoader(val_dataset, batch_size=32, shuffle=False)
 
     # Instantiating and moving the model to the GPU
-    model = CNN().to(device)
+    model = AdvancedCNN().to(device)
 
     # Defining the loss function and optimizer
     criterion = nn.CrossEntropyLoss()
