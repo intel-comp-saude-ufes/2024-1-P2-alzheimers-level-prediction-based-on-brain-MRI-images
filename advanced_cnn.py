@@ -8,23 +8,23 @@ class AdvancedCNN(nn.Module):
         
         # First convolutional layer
         self.conv1 = nn.Conv2d(1, 32, kernel_size=3, stride=1, padding=1)
-        self.bn1 = nn.BatchNorm2d(32)  # Normalização em lote
+        self.bn1 = nn.BatchNorm2d(32)  # Batch Normalization
         self.pool = nn.MaxPool2d(kernel_size=2, stride=2, padding=0)
         
         # Second convolutional layer
         self.conv2 = nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1)
-        self.bn2 = nn.BatchNorm2d(64)  # Normalização em lote
+        self.bn2 = nn.BatchNorm2d(64)  # Batch Normalization
         
         # Third convolutional layer
         self.conv3 = nn.Conv2d(64, 128, kernel_size=3, stride=1, padding=1)
-        self.bn3 = nn.BatchNorm2d(128)  # Normalização em lote
+        self.bn3 = nn.BatchNorm2d(128)  # Batch Normalization
         
         # Fourth convolutional layer
         self.conv4 = nn.Conv2d(128, 256, kernel_size=3, stride=1, padding=1)
-        self.bn4 = nn.BatchNorm2d(256)  # Normalização em lote
+        self.bn4 = nn.BatchNorm2d(256)  # Batch Normalization
         
         # Fully connected layers
-        self.fc1 = nn.Linear(256 * 14 * 14, 512)  # Ajuste as dimensões conforme necessário
+        self.fc1 = nn.Linear(256 * 14 * 14, 512)  # Adjust dimensions as needed
         self.fc2 = nn.Linear(512, 128)
         self.fc3 = nn.Linear(128, 4)  # 4 classes: non-demented, very mild demented, mild demented, demented
     
