@@ -41,6 +41,10 @@ if __name__ == '__main__':
     # Training the model
     train_model(device, model, train_loader, val_loader, criterion, optimizer, num_epochs=10)
 
+    # Saving the trained model
+    torch.save(model.state_dict(), 'alzheimer_model.pth')
+    print("Model saved!")
+
     # Loading the test data
     test_dataset = AlzheimerDataset('./data/test', transform=transform)
     test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
