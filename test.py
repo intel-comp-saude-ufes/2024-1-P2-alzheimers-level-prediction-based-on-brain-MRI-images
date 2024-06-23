@@ -5,6 +5,7 @@ def test_model(device, model, test_loader, criterion):
     test_running_loss = 0.0
     correct = 0
     total = 0
+    
     with torch.no_grad():
         for images, labels in test_loader:
             images, labels = images.to(device), labels.to(device)
