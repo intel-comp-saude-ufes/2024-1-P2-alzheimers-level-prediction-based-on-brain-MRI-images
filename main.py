@@ -8,6 +8,7 @@ from simple_cnn import SimpleCNN
 from advanced_cnn import AdvancedCNN
 from train import train_model
 from test import test_model
+from plots import plot_confusion_matrix, plot_roc_curve
 
 
 if __name__ == '__main__':
@@ -39,15 +40,22 @@ if __name__ == '__main__':
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 
     # Training the model
-    train_model(device, model, train_loader, val_loader, criterion, optimizer, num_epochs=10)
+    train_model(device, model, train_loader, val_loader, criterion, optimizer, num_epochs=25)
 
     # Saving the trained model
     torch.save(model.state_dict(), 'alzheimer_model.pth')
-    print("Model saved!")
+    print("\nModel saved!")
 
     # Loading the test data
     test_dataset = AlzheimerDataset('./data/test', transform=transform)
     test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
 
     # Evaluating the model
-    test_model(device, model, test_loader, criterion)
+    all_labels, all_preds = test_model(device, model, test_loader, criterion)
+
+    # Plotting confusion matrix
+    class_names = ['non-demented', 'mild-demented', 'moderate-demented', 'very-mild-demented']
+    plot_confusion_matrix(all_labels, all_preds, class_names)
+
+    # Plotting ROC curve
+    plot_roc_curve(all_labels, all_preds, class_names)
