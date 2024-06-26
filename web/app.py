@@ -25,7 +25,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # Loading the trained model
 model = AdvancedCNN()
-model.load_state_dict(torch.load('../alzheimer_model.pth', map_location=torch.device(device)))
+model.load_state_dict(torch.load('../model_fold_1.pth', map_location=torch.device(device)))
 model.eval() # Sets the model in evaluation mode
 
 # Function to predict image class
@@ -44,7 +44,7 @@ def index():
         if file:
             image_bytes = BytesIO(file.read())
             prediction = predict_image(image_bytes, model)
-            class_names = ['non-demented', 'very mild demented', 'mild demented', 'demented']
+            class_names = ['non-demented', 'very-mild-demented', 'mild-demented', 'moderate-demented']
             result = class_names[prediction]
             return render_template('result.html', result=result)
     return render_template('index.html')
