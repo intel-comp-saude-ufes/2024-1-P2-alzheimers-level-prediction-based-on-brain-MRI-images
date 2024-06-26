@@ -1,6 +1,6 @@
 import torch
 
-def train_model(device, model, train_loader, val_loader, criterion, optimizer, num_epochs=25):
+def train_model(device, model, train_loader, val_loader, criterion, optimizer, num_epochs=25, validate=False):
     # Iterate over the specified number of epochs
     for epoch in range(num_epochs):
         # Set the model to training mode
@@ -23,10 +23,11 @@ def train_model(device, model, train_loader, val_loader, criterion, optimizer, n
         epoch_loss = running_loss / len(train_loader.dataset)
         print(f'Epoch {epoch+1}/{num_epochs}, Loss: {epoch_loss:.4f}')
         
-        # Validation
-        model.eval()
-        val_loss, val_accuracy, _, _, _ = evaluate_model(device, model, val_loader, criterion)
-        print(f'Validation Loss: {val_loss:.4f}, Accuracy: {val_accuracy:.4f}')
+        if validate:
+            # Validation
+            model.eval()
+            val_loss, val_accuracy, _, _, _ = evaluate_model(device, model, val_loader, criterion)
+            print(f'Validation Loss: {val_loss:.4f}, Accuracy: {val_accuracy:.4f}')
 
 
 def evaluate_model(device, model, data_loader, criterion):

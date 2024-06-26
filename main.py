@@ -37,13 +37,15 @@ def cross_validate_model(device, dataset, model_class, criterion, optimizer_clas
         optimizer = optimizer_class(model.parameters(), lr=0.001)
         
         # Train the model
-        train_model(device, model, train_loader, val_loader, criterion, optimizer, num_epochs)
-
-        # Save the model after each fold
-        torch.save(model.state_dict(), f'model_fold_{fold}.pth')
+        train_model(device, model, train_loader, val_loader, criterion, optimizer, num_epochs, validate=True)
         
         # Evaluate the model on the validation set
         _, _, labels, preds, probs = evaluate_model(device, model, val_loader, criterion)
+
+        # Plot confusion matrix and ROC curve for each fold
+        class_names = ['non-demented', 'very-mild-demented', 'mild-demented', 'moderate-demented']
+        plot_confusion_matrix(labels, preds, class_names)
+        plot_roc_curve(labels, probs, class_names)
         
         # Stores labels, predictions and probs for all folds
         all_labels.extend(labels)
@@ -69,7 +71,7 @@ if __name__ == '__main__':
     ])
 
 
-    print("\nTraining model...")
+    print("\nCross validation...")
 
     # Loading training data
     train_dataset = AlzheimerDataset('./data/train', transform=transform)
@@ -82,26 +84,18 @@ if __name__ == '__main__':
         device, train_dataset, AdvancedCNN, criterion, torch.optim.Adam, num_epochs=2, n_splits=2
     )
 
+    # Plot confusion matrix and ROC curve for all folds
     class_names = ['non-demented', 'very-mild-demented', 'mild-demented', 'moderate-demented']
     plot_confusion_matrix(all_labels, all_preds, class_names)
     plot_roc_curve(all_labels, all_probs, class_names)
 
 
-    print("\n\nTesting model...")
-
-    # Load test data
-    test_dataset = AlzheimerDataset('./data/test', transform=transform)
-    test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
-
-    # Instantiate the model
+    print("\nTraining model with all data...")
+    
+    # Genereating final model
     model = AdvancedCNN().to(device)
-
-    # Load the trained model from the first fold
-    model.load_state_dict(torch.load('model_fold_1.pth'))
-
-    # Evaluate the model on the test set
-    labels, preds, probs = test_model(device, model, test_loader, criterion)
-
-    class_names = ['non-demented', 'very-mild-demented', 'mild-demented', 'moderate-demented']
-    plot_confusion_matrix(labels, preds, class_names)
-    plot_roc_curve(labels, probs, class_names)
+    optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+    train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
+    num_epochs = 10
+    train_model(device, model, train_loader, train_loader, criterion, optimizer, num_epochs, validate=False)
+    torch.save(model.state_dict(), 'model.pth') # Save the final model
