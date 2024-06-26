@@ -39,7 +39,7 @@ def cross_validate_model(device, dataset, model_class, criterion, optimizer_clas
         # Train the model
         train_model(device, model, train_loader, val_loader, criterion, optimizer, num_epochs, validate=True)
         
-        # Evaluate the model on the validation set
+        # Evaluate the model on the validation set again to get the confusion matrix and ROC curve
         _, _, labels, preds, probs = evaluate_model(device, model, val_loader, criterion)
 
         # Plot confusion matrix and ROC curve for each fold
