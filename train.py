@@ -1,6 +1,9 @@
 import torch
+from matplotlib import pyplot as plt
 
-def train_model(device, model, train_loader, val_loader, criterion, optimizer, num_epochs=25, validate=False):
+def train_model(device, model, train_loader, val_loader, criterion, optimizer, num_epochs=25, validate=False, plot_loss_curve=False):
+    epochs_losses = []
+
     # Iterate over the specified number of epochs
     for epoch in range(num_epochs):
         # Set the model to training mode
@@ -21,6 +24,7 @@ def train_model(device, model, train_loader, val_loader, criterion, optimizer, n
         
         # Calculate epoch loss
         epoch_loss = running_loss / len(train_loader.dataset)
+        epochs_losses.append(epoch_loss)
         print(f'Epoch {epoch+1}/{num_epochs}, Loss: {epoch_loss:.4f}')
         
         if validate:
@@ -28,6 +32,14 @@ def train_model(device, model, train_loader, val_loader, criterion, optimizer, n
             model.eval()
             val_loss, val_accuracy, _, _, _ = evaluate_model(device, model, val_loader, criterion)
             print(f'Validation Loss: {val_loss:.4f}, Accuracy: {val_accuracy:.4f}')
+
+    if plot_loss_curve:
+        # Plotar as curvas de aprendizado
+        plt.plot(epochs_losses, label="CrossEntropyLoss")
+        plt.xlabel("Epochs")
+        plt.ylabel("Cross Entropy Loss")
+        plt.legend()
+        plt.show()
 
 
 def evaluate_model(device, model, data_loader, criterion):
