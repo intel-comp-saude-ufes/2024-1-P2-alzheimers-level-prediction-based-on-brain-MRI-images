@@ -12,6 +12,7 @@ def test_model(device, model, test_loader, criterion):
     # Lists to store all true labels and predicted probabilities
     all_labels = []
     all_preds = []
+    all_probs = []
     
     # Disable gradient computation (saves memory and speeds up the process)
     with torch.no_grad():
@@ -31,13 +32,14 @@ def test_model(device, model, test_loader, criterion):
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
 
-            # Armazena os rótulos verdadeiros e as probabilidades preditas
+            # Stores true labels, predictions and probabilities
             all_labels.extend(labels.cpu().numpy())
             all_preds.extend(predicted.cpu().numpy())
+            all_probs.extend(outputs.cpu().numpy())
     
     # Calculates and prints test accuracy
     test_loss = test_running_loss / len(test_loader.dataset)
     test_accuracy = correct / total
     print(f'\nTest Loss: {test_loss:.4f}, Accuracy: {test_accuracy:.4f}')
 
-    return all_labels, all_preds
+    return all_labels, all_preds, all_probs

@@ -88,7 +88,7 @@ if __name__ == '__main__':
     # plot_roc_curve(all_labels, all_preds, class_names)
 
 
-    print("\nTesting model...")
+    print("\n\nTesting model...")
 
     # Carrega os dados de teste
     test_dataset = AlzheimerDataset('./data/test', transform=transform)
@@ -101,7 +101,7 @@ if __name__ == '__main__':
     model.load_state_dict(torch.load('model_fold_1.pth'))
 
     # Avalia o modelo no conjunto de teste
-    labels, preds = test_model(device, model, test_loader, criterion)
+    labels, preds, probs = test_model(device, model, test_loader, criterion)
 
     class_names = ['non-demented', 'very-mild-demented', 'mild-demented', 'moderate-demented']
 
@@ -109,4 +109,4 @@ if __name__ == '__main__':
     plot_confusion_matrix(labels, preds, class_names)
 
     # Plota a curva ROC
-    plot_roc_curve(labels, preds, class_names)
+    plot_roc_curve(labels, probs, class_names)
