@@ -45,7 +45,7 @@ def cross_validate_model(device, dataset, model_class, criterion, optimizer_clas
         # Evaluate the model on the validation set
         _, _, labels, preds, probs = evaluate_model(device, model, val_loader, criterion)
         
-        # Armazena as etiquetas e previsões de todos os folds
+        # Stores labels, predictions and probs for all folds
         all_labels.extend(labels)
         all_preds.extend(preds)
         all_probs.extend(probs)
