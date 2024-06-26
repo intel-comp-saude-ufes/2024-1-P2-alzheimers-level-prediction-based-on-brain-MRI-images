@@ -40,7 +40,7 @@ if __name__ == '__main__':
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 
     # Training the model
-    train_model(device, model, train_loader, val_loader, criterion, optimizer, num_epochs=25)
+    train_model(device, model, train_loader, val_loader, criterion, optimizer, num_epochs=1)
 
     # Saving the trained model
     torch.save(model.state_dict(), 'alzheimer_model.pth')
@@ -54,7 +54,7 @@ if __name__ == '__main__':
     all_labels, all_preds = test_model(device, model, test_loader, criterion)
 
     # Plotting confusion matrix
-    class_names = ['non-demented', 'mild-demented', 'moderate-demented', 'very-mild-demented']
+    class_names = ['non-demented', 'very-mild-demented', 'mild-demented', 'moderate-demented']
     plot_confusion_matrix(all_labels, all_preds, class_names)
 
     # Plotting ROC curve

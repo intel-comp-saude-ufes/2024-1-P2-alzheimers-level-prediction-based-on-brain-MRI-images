@@ -12,9 +12,9 @@ class AlzheimerDataset(Dataset):
         # Map folders to labels
         self.label_map = {
             'non-demented': 0,
-            'mild-demented': 1,
-            'moderate-demented': 2,
-            'very-mild-demented': 3
+            'very-mild-demented': 1,
+            'mild-demented': 2,
+            'moderate-demented': 3
         }
 
         # Collect all image paths and their respective labels
