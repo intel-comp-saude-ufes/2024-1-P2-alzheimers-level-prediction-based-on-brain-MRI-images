@@ -19,10 +19,9 @@ def plot_confusion_matrix(y_true, y_pred, class_names):
     plt.show()
 
 
-def plot_roc_curve(y_true, y_pred, class_names):
+def plot_roc_curve(y_true, y_probs, class_names):
     # Binarizing the labels
     y_true_binarized = label_binarize(y_true, classes=[0, 1, 2, 3])
-    y_pred_binarized = label_binarize(y_pred, classes=[0, 1, 2, 3])
 
     # Initializes dictionaries to store false positive rates (FPR), 
     # true positive rates (TPR), and area under the curve (AUC) for each class
@@ -35,7 +34,7 @@ def plot_roc_curve(y_true, y_pred, class_names):
 
     # For each class, calculate the FPR and TPR curves and the AUC
     for i, class_name in enumerate(class_names):
-        fpr[class_name], tpr[class_name], _ = roc_curve(y_true_binarized[:, i], y_pred_binarized[:, i])
+        fpr[class_name], tpr[class_name], _ = roc_curve(y_true_binarized[:, i], np.array(y_probs)[:, i])
         roc_auc[class_name] = auc(fpr[class_name], tpr[class_name])
 
         # Plota a curva ROC para a classe
