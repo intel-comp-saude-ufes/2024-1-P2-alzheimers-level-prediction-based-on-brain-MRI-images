@@ -1,12 +1,13 @@
 import torch
 import torch.nn as nn
-import torchvision
 import torchvision.transforms as transforms
+from torch.utils.data import DataLoader
 
+# Definição da camada convolucional 3x3
 def conv3x3(in_channels, out_channels, stride=1):
-    return nn.Conv2d(in_channels, out_channels, kernel_size=3, 
-                     stride=stride, padding=1, bias=False)
+    return nn.Conv2d(in_channels, out_channels, kernel_size=3, stride=stride, padding=1, bias=False)
 
+# Definição do bloco residual
 class ResidualBlock(nn.Module):
     def __init__(self, in_channels, out_channels, stride=1, downsample=None):
         super(ResidualBlock, self).__init__()
@@ -16,7 +17,7 @@ class ResidualBlock(nn.Module):
         self.conv2 = conv3x3(out_channels, out_channels)
         self.bn2 = nn.BatchNorm2d(out_channels)
         self.downsample = downsample
-        
+
     def forward(self, x):
         residual = x
         out = self.conv1(x)
@@ -29,19 +30,20 @@ class ResidualBlock(nn.Module):
         out += residual
         out = self.relu(out)
         return out
-    
+
+# Definição do modelo ResNet
 class ResNet(nn.Module):
     def __init__(self, block, layers, num_classes=10):
         super(ResNet, self).__init__()
         self.in_channels = 16
-        self.conv = conv3x3(3, 16)
+        self.conv = conv3x3(1, 16)  # Modificar para 1 canal de entrada
         self.bn = nn.BatchNorm2d(16)
         self.relu = nn.ReLU(inplace=True)
         self.layer1 = self.make_layer(block, 16, layers[0])
         self.layer2 = self.make_layer(block, 32, layers[1], 2)
         self.layer3 = self.make_layer(block, 64, layers[2], 2)
         self.avg_pool = nn.AvgPool2d(8)
-        self.fc = nn.Linear(64, num_classes)
+        self.fc = nn.Linear(3136, num_classes)
         
     def make_layer(self, block, out_channels, blocks, stride=1):
         downsample = None
@@ -56,7 +58,7 @@ class ResNet(nn.Module):
             layers.append(block(out_channels, out_channels))
         return nn.Sequential(*layers)
     
-    def forward(self, x): 
+    def forward(self, x):
         out = self.conv(x)
         out = self.bn(out)
         out = self.relu(out)
@@ -64,6 +66,6 @@ class ResNet(nn.Module):
         out = self.layer2(out)
         out = self.layer3(out)
         out = self.avg_pool(out)
-        out = out.view(out.size(0), -1)
+        out = out.view(out.size(0), -1)  # Flatten the tensor
         out = self.fc(out)
         return out

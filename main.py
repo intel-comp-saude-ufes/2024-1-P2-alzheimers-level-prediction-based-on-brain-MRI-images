@@ -35,9 +35,11 @@ if __name__ == '__main__':
     
     # Genereating final model
 
-    model = AdvancedCNN().to(device)
+    # model = SimpleCNN().to(device)
 
-    #model = ResNet(ResidualBlock(in_channels=1), [2, 2, 2], num_classes=4)
+    # model = AdvancedCNN().to(device)
+
+    model = ResNet(ResidualBlock, [2, 2, 2], num_classes=4).to(device)
 
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
     train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
