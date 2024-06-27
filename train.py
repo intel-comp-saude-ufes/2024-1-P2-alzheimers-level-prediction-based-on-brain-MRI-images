@@ -33,8 +33,17 @@ def train_model(device, model, train_loader, val_loader, criterion, optimizer, n
             val_loss, val_accuracy, _, _, _ = evaluate_model(device, model, val_loader, criterion)
             print(f'Validation Loss: {val_loss:.4f}, Accuracy: {val_accuracy:.4f}')
 
+        # Salvando o checkpoint da última época
+        checkpoint = {
+            'epoch': epoch,
+            'model_state_dict': model.state_dict(),
+            'optimizer_state_dict': optimizer.state_dict(),
+            'loss': criterion,
+            'loss_val': epoch_loss
+        }        
+        torch.save(checkpoint, "last_checkpoint.pth")
+
     if plot_loss_curve:
-        # Plotar as curvas de aprendizado
         plt.plot(epochs_losses, label="CrossEntropyLoss")
         plt.xlabel("Epochs")
         plt.ylabel("Cross Entropy Loss")
