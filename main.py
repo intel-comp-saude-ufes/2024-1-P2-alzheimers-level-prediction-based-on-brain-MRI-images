@@ -31,22 +31,22 @@ if __name__ == '__main__':
     # Defining the loss function and optimizer
     criterion = nn.CrossEntropyLoss()
 
-    print("\nTraining model with all data...")
+    print("\nTraining model with all train data...")
     
     # Genereating final model
 
     # model = SimpleCNN().to(device)
 
-    # model = AdvancedCNN().to(device)
+    model = AdvancedCNN().to(device)
 
-    model = ResNet(ResidualBlock, [2, 2, 2], num_classes=4).to(device)
+    # model = ResNet(ResidualBlock, [2, 2, 2], num_classes=4).to(device)
 
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
     train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
 
-    num_epochs = 10
+    num_epochs = 20
 
-    train_model(device, model, train_loader, None, criterion, optimizer, num_epochs, validate=False, plot_loss_curve=True)
+    train_model(device, model, train_loader, None, criterion, optimizer, num_epochs, early_stopping=True, n_iter_no_change=5, tol=0.1, validate=False, plot_loss_curve=True)
     torch.save(model.state_dict(), 'model.pth') # Save the final model
 
     print("\nTesting...")
@@ -63,5 +63,5 @@ if __name__ == '__main__':
 
     # Plot confusion matrix and ROC curve
     class_names = ['non-demented', 'very-mild-demented', 'mild-demented', 'moderate-demented']
-    plot_confusion_matrix(all_labels, all_preds, class_names)
-    plot_roc_curve(all_labels, all_probs, class_names)
+    plot_confusion_matrix(all_labels, all_preds, class_names, save_plot=True)
+    plot_roc_curve(all_labels, all_probs, class_names, save_plot=True)

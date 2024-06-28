@@ -36,7 +36,7 @@ class ResNet(nn.Module):
     def __init__(self, block, layers, num_classes=10):
         super(ResNet, self).__init__()
         self.in_channels = 16
-        self.conv = conv3x3(1, 16)  # Modificar para 1 canal de entrada
+        self.conv = conv3x3(1, 16)
         self.bn = nn.BatchNorm2d(16)
         self.relu = nn.ReLU(inplace=True)
         self.layer1 = self.make_layer(block, 16, layers[0])

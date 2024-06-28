@@ -4,7 +4,7 @@ from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, roc_curve,
 from sklearn.preprocessing import label_binarize
 
 
-def plot_confusion_matrix(y_true, y_pred, class_names):
+def plot_confusion_matrix(y_true, y_pred, class_names, save_plot=False):
     # Calculates the confusion matrix
     cm = confusion_matrix(y_true, y_pred)
 
@@ -13,13 +13,18 @@ def plot_confusion_matrix(y_true, y_pred, class_names):
 
     # Create a confusion matrix display
     disp = ConfusionMatrixDisplay(confusion_matrix=cm_normalized, display_labels=class_names)
-
+    
     # Plot the confusion matrix
     disp.plot(cmap=plt.cm.Blues, values_format='.2f')
-    plt.show()
+    plt.xticks(rotation=90)
+    if save_plot:
+        plt.savefig('confusion_matrix.png')
+    else:
+        plt.show()
 
 
-def plot_roc_curve(y_true, y_probs, class_names):
+
+def plot_roc_curve(y_true, y_probs, class_names, save_plot=False):
     # Binarizing the labels
     y_true_binarized = label_binarize(y_true, classes=[0, 1, 2, 3])
 
@@ -52,4 +57,7 @@ def plot_roc_curve(y_true, y_probs, class_names):
     plt.ylabel('True Positive Rate')
     plt.title('Receiver Operating Characteristic')
     plt.legend(loc="lower right")
-    plt.show()
+    if save_plot:
+        plt.savefig('roc_curve.png')
+    else:
+        plt.show()

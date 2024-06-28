@@ -1,8 +1,9 @@
 import torch
 from matplotlib import pyplot as plt
 
-def train_model(device, model, train_loader, val_loader, criterion, optimizer, num_epochs=25, validate=False, plot_loss_curve=False):
+def train_model(device, model, train_loader, val_loader, criterion, optimizer, num_epochs=25, early_stopping=False, n_iter_no_change=3, tol=0.1, validate=False, plot_loss_curve=False):
     epochs_losses = []
+    n_iter_no_change_actual = 0
 
     # Iterate over the specified number of epochs
     for epoch in range(num_epochs):
@@ -26,7 +27,21 @@ def train_model(device, model, train_loader, val_loader, criterion, optimizer, n
         epoch_loss = running_loss / len(train_loader.dataset)
         epochs_losses.append(epoch_loss)
         print(f'Epoch {epoch+1}/{num_epochs}, Loss: {epoch_loss:.4f}')
+
+        if early_stopping and epoch >= 1:
+            if ( (epochs_losses[epoch-1] - epochs_losses[epoch]) < tol ):
+                n_iter_no_change_actual += 1
+            else:
+                n_iter_no_change_actual = 0
+            
+            # remove these prints after
+            print(f"epochs_losses[epoch] - epochs_losses[epoch - 1] = {epochs_losses[epoch-1] - epochs_losses[epoch]}")
+            print(f'n_iter_no_change_actual = {n_iter_no_change_actual}')
         
+            if n_iter_no_change_actual == n_iter_no_change:
+                print(f'Early stopping activated at epoch {epoch+1}!')
+                break
+
         if validate:
             # Validation
             model.eval()
@@ -48,7 +63,7 @@ def train_model(device, model, train_loader, val_loader, criterion, optimizer, n
         plt.xlabel("Epochs")
         plt.ylabel("Cross Entropy Loss")
         plt.legend()
-        plt.show()
+        plt.savefig("cross_entropy_loss.png")
 
 
 def evaluate_model(device, model, data_loader, criterion):
