@@ -1,7 +1,4 @@
-import torch
 import torch.nn as nn
-import torchvision.transforms as transforms
-from torch.utils.data import DataLoader
 
 # Definição da camada convolucional 3x3
 def conv3x3(in_channels, out_channels, stride=1):

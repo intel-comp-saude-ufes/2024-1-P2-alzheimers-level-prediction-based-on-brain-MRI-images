@@ -12,6 +12,7 @@ def train_model(device, model, train_loader, val_loader, criterion, optimizer, n
 
         # Initialize epoch training loss
         running_loss = 0.0
+        
 
         # Iterate over the training data set
         for images, labels in train_loader:

@@ -38,7 +38,7 @@ if __name__ == '__main__':
     # model = SimpleCNN().to(device)
 
     model = AdvancedCNN().to(device)
-
+ 
     # model = ResNet(ResidualBlock, [2, 2, 2], num_classes=4).to(device)
 
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)

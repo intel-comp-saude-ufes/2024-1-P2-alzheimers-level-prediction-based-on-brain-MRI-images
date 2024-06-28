@@ -58,6 +58,6 @@ def plot_roc_curve(y_true, y_probs, class_names, save_plot=False):
     plt.title('Receiver Operating Characteristic')
     plt.legend(loc="lower right")
     if save_plot:
-        plt.savefig('roc_curve.png')
+        plt.savefig('roc_curve.png') 
     else:
         plt.show()
