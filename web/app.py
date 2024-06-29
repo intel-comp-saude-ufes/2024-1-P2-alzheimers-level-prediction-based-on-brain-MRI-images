@@ -25,7 +25,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # Loading the trained model
 model = AdvancedCNN()
-model.load_state_dict(torch.load('../model_fold_1.pth', map_location=torch.device(device)))
+model.load_state_dict(torch.load('../model.pth', map_location=torch.device(device)))
 model.eval() # Sets the model in evaluation mode
 
 # Function to predict image class
