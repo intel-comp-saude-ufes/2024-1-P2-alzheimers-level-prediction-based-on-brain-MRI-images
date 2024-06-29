@@ -8,11 +8,12 @@ import torch.nn as nn
 from alzheimer_dataset import AlzheimerDataset
 from simple_cnn import SimpleCNN
 from advanced_cnn import AdvancedCNN
-from train import train_model, evaluate_model
+from train import train_model
+from test import test_model
 from plots import plot_confusion_matrix, plot_roc_curve
 
 def cross_validate_model(device, dataset, model_class, criterion, optimizer_class, num_epochs=25, n_splits=5):
-    # Sets cross validation with n folds
+    # Sets cross validation with n_splits folds
     skf = StratifiedKFold(n_splits=n_splits)
     all_labels = []
     all_preds = []
@@ -37,16 +38,11 @@ def cross_validate_model(device, dataset, model_class, criterion, optimizer_clas
         optimizer = optimizer_class(model.parameters(), lr=0.001)
         
         # Train the model
-        train_model(device, model, train_loader, val_loader, criterion, optimizer, num_epochs, validate=True, plot_loss_curve=False)
+        train_model(device, model, train_loader, val_loader, criterion, optimizer, num_epochs, early_stopping=True, n_iter_no_change=5, tol=0.01, validate=True, plot_loss_curve=False)
         
         # Evaluate the model on the validation set again to get the confusion matrix and ROC curve
-        _, accuracy, labels, preds, probs = evaluate_model(device, model, val_loader, criterion)
+        accuracy, loss, labels, preds, probs = test_model(device, model, val_loader, criterion)
         accuracys.append(accuracy)
-
-        # Plot confusion matrix and ROC curve for each fold
-        # class_names = ['non-demented', 'very-mild-demented', 'mild-demented', 'moderate-demented']
-        # plot_confusion_matrix(labels, preds, class_names)
-        # plot_roc_curve(labels, probs, class_names)
         
         # Stores labels, predictions and probs for all folds
         all_labels.extend(labels)
@@ -63,6 +59,8 @@ if __name__ == '__main__':
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print(f'Using device: {device}\n')
 
+    print("\nCross validation...")
+
     # Defining transformations
     transform = transforms.Compose([
         transforms.Resize((224, 224)),
@@ -71,17 +69,22 @@ if __name__ == '__main__':
     ])
 
     # Loading training data
-    train_dataset = AlzheimerDataset('./data/train', transform=transform)
+    train_dataset = AlzheimerDataset('./data_augmented', transform=transform)
 
     # Defining the loss function and optimizer
     criterion = nn.CrossEntropyLoss()
-
-
-    print("\nCross validation...")
+    # Optimizer class
+    optimizer = torch.optim.Adam
+    # Model class
+    model = AdvancedCNN
+    # Number of epochs
+    num_epochs = 20
+    # NUmber of folders
+    num_splits = 5
 
     # Perform cross validation
     all_labels, all_preds, all_probs, accuracys = cross_validate_model(
-        device, train_dataset, AdvancedCNN, criterion, torch.optim.Adam, num_epochs=10, n_splits=5
+        device, train_dataset, model, criterion, optimizer, num_epochs=num_epochs, n_splits=num_splits
     )
 
     # Convertendo a lista para um array NumPy
@@ -91,8 +94,7 @@ if __name__ == '__main__':
     # Calculando o desvio padrão
     std_dev = np.std(accuracys_array)
 
-    print(f"Média: {mean}")
-    print(f"Desvio Padrão: {std_dev}")  
+    print(f"Acurácia: {(mean*100):.2f} % +/- {(std_dev*100):.2f} %")
 
     # Plot confusion matrix and ROC curve for all folds
     class_names = ['non-demented', 'very-mild-demented', 'mild-demented', 'moderate-demented']

@@ -1,2 +1,5 @@
 data
+runs
+data_augmented
+results
 *.pth
