@@ -76,7 +76,7 @@ if __name__ == '__main__':
         transforms.Normalize(mean=[0.5], std=[0.5])
     ])
 
-    # Loading training data
+    # Loading test data
     test_dataset = AlzheimerDataset(test_data_path, transform=test_transform)
     test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=True)
     
