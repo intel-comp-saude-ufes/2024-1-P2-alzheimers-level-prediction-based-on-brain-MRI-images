@@ -12,14 +12,14 @@ def test_model(device, model, test_loader, criterion):
     model.eval()
 
     # Initializes variables to calculate test loss and accuracy
-    test_running_loss = 0.0
-    correct = 0
-    total = 0
+    test_running_loss   = 0.0
+    correct             = 0
+    total               = 0
 
     # Lists to store all true labels and predicted probabilities
-    all_labels = []
-    all_preds = []
-    all_probs = []
+    all_labels  = []
+    all_preds   = []
+    all_probs   = []
     
     # Disable gradient computation (saves memory and speeds up the process)
     with torch.no_grad():
@@ -32,10 +32,11 @@ def test_model(device, model, test_loader, criterion):
 
             # Calculate batch loss
             loss = criterion(outputs, labels)
-            test_running_loss += loss.item() * images.size(0)
+            test_running_loss += loss.item()
 
             # Get the class predictions (the class with the highest score)
             _, predicted = torch.max(outputs, 1)
+            
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
 
@@ -45,7 +46,7 @@ def test_model(device, model, test_loader, criterion):
             all_probs.extend(outputs.cpu().numpy())
     
     # Calculates and prints test accuracy
-    test_loss = test_running_loss / len(test_loader.dataset)
+    test_loss = test_running_loss / len(test_loader)
     test_accuracy = correct / total
 
     return test_accuracy, test_loss, all_labels, all_preds, all_probs

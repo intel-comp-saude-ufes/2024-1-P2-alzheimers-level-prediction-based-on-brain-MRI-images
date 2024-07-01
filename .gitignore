@@ -1,5 +1,8 @@
 data
 runs
 data_augmented
+data_augmented_balanced
+data-OAS
 results
 *.pth
+*.png

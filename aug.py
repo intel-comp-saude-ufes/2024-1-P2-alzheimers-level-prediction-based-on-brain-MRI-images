@@ -2,7 +2,6 @@ import os
 from PIL import Image
 import numpy as np
 import imgaug.augmenters as iaa
-import shutil
 
 def get_mri_augmentation_sequence():
     """
@@ -86,7 +85,7 @@ def augment_and_save_images(input_dir, output_dir, num_augmented_images=10):
 
 def balance_classes_with_augmentation(input_dir, output_dir):
     """
-    Gera augmentações para equilibrar o número de imagens em cada classe.
+    Gera augmentações para equilibrar o número de imagens em cada classe (aumento de 20% na classe com mais imagens)
 
     Args:
         input_dir (str): Diretório contendo as imagens originais.
@@ -100,7 +99,7 @@ def balance_classes_with_augmentation(input_dir, output_dir):
             class_counts[category] = len(os.listdir(category_path))
 
     # Determinar o número máximo de imagens em qualquer classe
-    max_count = max(class_counts.values())
+    max_count = int( max(class_counts.values()) * 5 )
 
     # Aplicar augmentação para balancear as classes
     for category in class_counts:
@@ -147,7 +146,7 @@ def balance_classes_with_augmentation(input_dir, output_dir):
 if __name__ == '__main__':
     # Caminhos de entrada e saída
     input_directory = "data/train"
-    output_directory = "data_augmented"
+    output_directory = "data_augmented_balanced"
 
     # Aplicar augmentação e salvar as imagens
-    augment_and_save_images(input_directory, output_directory, 10)
+    balance_classes_with_augmentation(input_directory, output_directory)
