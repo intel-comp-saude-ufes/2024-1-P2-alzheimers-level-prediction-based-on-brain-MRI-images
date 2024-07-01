@@ -2,13 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload MRI Image</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Upload MRI Image</h1>
-    <form method="POST" enctype="multipart/form-data">
-        <input type="file" name="file" accept=".jpg, .jpeg, .png">
-        <button type="submit">Predict</button>
-    </form>
+    <div class="container">
+        <h1>Alzheimer's Detection</h1>
+        <p>Upload an MRI image to predict the stage of Alzheimer's disease.</p>
+        <form method="POST" enctype="multipart/form-data">
+            <input type="file" name="file" accept=".jpg, .jpeg, .png" class="file-input">
+            <button type="submit" class="submit-button">Predict</button>
+        </form>
+    </div>
 </body>
 </html>
