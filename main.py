@@ -7,13 +7,15 @@ from glob import glob
 import numpy as np
 
 from alzheimer_dataset import AlzheimerDataset
+from alzheimer_dataset_3d import AlzheimerDataset3D
 from simple_cnn import SimpleCNN
 from advanced_cnn import AdvancedCNN
+from advanced_cnn_3d import AdvancedCNN3D
 from resnet import ResNet, ResidualBlock
 from train import train_model
 from test import test_model
 from plots import plot_confusion_matrix, plot_roc_curve
-from aug import get_mri_augmentation_sequence
+# from aug import get_mri_augmentation_sequence
 
 
 if __name__ == '__main__':
@@ -27,27 +29,23 @@ if __name__ == '__main__':
     # Hiper-parameters
     learning_rate       = 0.001
     batch_size          = 32
-    num_epochs          = 20
+    num_epochs          = 2
     n_iter_no_change    = 3
     tol                 = 0.01
 
     # Defining the data path
-    # train_data_path = "./data/train"
-    train_data_path = "./data_augmented"
+    train_data_path = "./data/train"
     test_data_path = "./data/test"
 
-    # Defining train transformations (USING AUGMENTATION)
+    # Defining train transformations
     train_transform = transforms.Compose([
-        transforms.Resize((224, 224)),
-        np.array,
-        get_mri_augmentation_sequence().augment_image,
-        np.copy,
+        # transforms.Resize((224, 224)),
         transforms.ToTensor(),
         transforms.Normalize(mean=[0.5], std=[0.5])
     ])
 
     # Loading training data
-    train_dataset = AlzheimerDataset(train_data_path, transform=train_transform)
+    train_dataset = AlzheimerDataset3D(train_data_path, transform=train_transform)
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 
     # Defining the loss function and optimizer
@@ -56,7 +54,8 @@ if __name__ == '__main__':
     # Chossing the model
     # model = SimpleCNN().to(device)
     # model = AdvancedCNN().to(device)
-    model = ResNet(ResidualBlock, [2, 2, 2], num_classes=4).to(device)
+    model = AdvancedCNN3D().to(device)
+    # model = ResNet(ResidualBlock, [2, 2, 2], num_classes=4).to(device)
 
     # Optimizer
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
@@ -71,13 +70,13 @@ if __name__ == '__main__':
 
     # Defining transformations
     test_transform = transforms.Compose([
-        transforms.Resize((224, 224)),
+        # transforms.Resize((224, 224)),
         transforms.ToTensor(),
         transforms.Normalize(mean=[0.5], std=[0.5])
     ])
 
     # Loading test data
-    test_dataset = AlzheimerDataset(test_data_path, transform=test_transform)
+    test_dataset = AlzheimerDataset3D(test_data_path, transform=test_transform)
     test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=True)
     
     # Test the model
