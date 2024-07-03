@@ -13,25 +13,27 @@ from test import test_model
 from plots import plot_confusion_matrix, plot_roc_curve
 
 def cross_validate_model(device, dataset, model_class, criterion, optimizer_class, num_epochs=25, n_splits=5):
-    # Sets cross validation with n_splits folds
-    skf = StratifiedKFold(n_splits=n_splits)
     all_labels = []
     all_preds = []
     all_probs = []
     accuracys = []
+    
     fold = 1
     
     # Splits data into training and validation for each fold
-    for train_idx, val_idx in skf.split(dataset.image_paths, dataset.labels):
+    while fold <= n_splits:
         print(f'\nFold {fold}/{n_splits}')
+
+        # Get the fold dir
+        fold_dir = f'./cross_validation/Folder{fold}'
         
         # Creates the training and validation subsets
-        train_subset = Subset(dataset, train_idx)
-        val_subset = Subset(dataset, val_idx)
+        train_subset = AlzheimerDataset(f'{fold_dir}/train', transform=transform)
+        val_subset = AlzheimerDataset(f'{fold_dir}/val', transform=transform)
         
         # Creates the trainig and validation loaders
         train_loader = DataLoader(train_subset, batch_size=32, shuffle=True)
-        val_loader = DataLoader(val_subset, batch_size=32, shuffle=False)
+        val_loader = DataLoader(val_subset, batch_size=32, shuffle=True)
         
         # Instantiates the model and optimizer
         model = model_class().to(device)
@@ -53,6 +55,8 @@ def cross_validate_model(device, dataset, model_class, criterion, optimizer_clas
     
     return all_labels, all_preds, all_probs, accuracys
 
+
+
 if __name__ == '__main__':
     
     # Checking if the GPU is available
@@ -69,7 +73,8 @@ if __name__ == '__main__':
     ])
 
     # Loading training data
-    train_dataset = AlzheimerDataset('./data_augmented', transform=transform)
+    train_dataset = AlzheimerDataset('./coss_validation', transform=transform)
+    # train_dataset = AlzheimerDataset('./coss_validation_augmented', transform=transform)
 
     # Defining the loss function and optimizer
     criterion = nn.CrossEntropyLoss()
