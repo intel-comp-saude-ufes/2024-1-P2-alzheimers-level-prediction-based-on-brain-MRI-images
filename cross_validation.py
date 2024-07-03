@@ -40,7 +40,7 @@ def cross_validate_model(device, dataset, model_class, criterion, optimizer_clas
         optimizer = optimizer_class(model.parameters(), lr=0.001)
         
         # Train the model
-        train_model(device, model, train_loader, val_loader, criterion, optimizer, num_epochs, early_stopping=True, n_iter_no_change=5, tol=0.01, validate=True, plot_loss_curve=False)
+        train_model(device, model, train_loader, val_loader, criterion, optimizer, num_epochs, early_stopping=True, n_iter_no_change=3, tol=0.01, validate=True, plot_loss_curve=False)
         
         # Evaluate the model on the validation set again to get the confusion matrix and ROC curve
         accuracy, loss, labels, preds, probs = test_model(device, model, val_loader, criterion)

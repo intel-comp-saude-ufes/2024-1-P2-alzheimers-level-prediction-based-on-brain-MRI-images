@@ -32,16 +32,13 @@ if __name__ == '__main__':
     tol                 = 0.01
 
     # Defining the data path
-    # train_data_path = "./data/train"
-    train_data_path = "./data_augmented"
-    test_data_path = "./data/test"
+    train_data_path = "./train"
+    # train_data_path = "./train_augmented"
+    test_data_path = "./test"
 
-    # Defining train transformations (USING AUGMENTATION)
+    # Defining train transformations
     train_transform = transforms.Compose([
         transforms.Resize((224, 224)),
-        np.array,
-        get_mri_augmentation_sequence().augment_image,
-        np.copy,
         transforms.ToTensor(),
         transforms.Normalize(mean=[0.5], std=[0.5])
     ])
@@ -55,8 +52,8 @@ if __name__ == '__main__':
     
     # Chossing the model
     # model = SimpleCNN().to(device)
-    # model = AdvancedCNN().to(device)
-    model = ResNet(ResidualBlock, [2, 2, 2], num_classes=4).to(device)
+    model = AdvancedCNN().to(device)
+    # model = ResNet(ResidualBlock, [2, 2, 2], num_classes=4).to(device)
 
     # Optimizer
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
