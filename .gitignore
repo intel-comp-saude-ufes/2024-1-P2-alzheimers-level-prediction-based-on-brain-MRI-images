@@ -3,3 +3,4 @@ runs
 data_augmented
 results
 *.pth
+*.png
