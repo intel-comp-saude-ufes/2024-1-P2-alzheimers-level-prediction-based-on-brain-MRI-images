@@ -1,11 +1,7 @@
 # Alzheimer’s Level Prediction Based on Brain MRI Images
 
 ## Overview
-
-
-<p align="center">
-  <img src="media/under-development.png" />
-</p>
+This work aims to predict the Alzheimer's level of patients based on brain MRI images. To achieve this goal, we used a proposed convolutional neural network (CNN) to classify the images into the four classes and compared the results with a ResNet.
 
 
 ## Table of Contents
@@ -17,6 +13,7 @@
 - [Results](#results)
 - [Contributing](#contributing)
 - [Thanks](#thanks)
+
 
 ## Installation
 1. Clone this repository:
@@ -30,6 +27,7 @@
     ```
 
 ## Data Description
+For this study, we chose to work with a bank of Brain MRI imaging data created by [SARVESH DUBEY](https://www.kaggle.com/datasets/tourist55/alzheimers-dataset-4-class-of-images), which contains 6400 images of size 176x208 pixels, divided between four classes that represent the levels Alzheimer's (<strong>Non demented</strong>, <strong>very mild demented</strong>, <strong>mild demented</strong> and <strong>moderate demented</strong>), totaling 36 MB of data. Also data augmentation was used in this same database for purposes comparison with the original data
 
 ## Usage
 ### Main Program
@@ -39,6 +37,17 @@ python main.py
 ```
 
 ### Additional Scripts
+- `aug.py`: This script is responsible for performing data augmentation on the images in the dataset.
+- `cross-validation.py`: This script is responsible for performing cross-validation on the dataset.
+- `plots.py`: This script is responsible for generating the confusion matrix and the ROC curve.
+
+### Web page
+To run a web page that you can upload an image and get the prediction, use the following command:
+```
+python main.py # Generate the model
+cd web
+python app.py
+```
 
 
 ## Results
