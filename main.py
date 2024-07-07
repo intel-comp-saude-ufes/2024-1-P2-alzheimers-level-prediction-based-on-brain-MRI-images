@@ -30,9 +30,9 @@ if __name__ == '__main__':
     tol                 = 0.01
 
     # Defining the data path
-    train_data_path = "./train"
+    train_data_path = "./data/train"
     # train_data_path = "./train_augmented"
-    test_data_path = "./test"
+    test_data_path = "./data/test"
 
     # Defining train transformations
     train_transform = transforms.Compose([
