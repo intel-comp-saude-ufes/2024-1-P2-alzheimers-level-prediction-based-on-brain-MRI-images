@@ -5,7 +5,6 @@ import torch.nn as nn
 import matplotlib.pyplot as plt
 from glob import glob
 import numpy as np
-
 from alzheimer_dataset import AlzheimerDataset
 from proposed_cnn import ProposedCNN
 from resnet import ResNet, ResidualBlock
@@ -50,7 +49,6 @@ if __name__ == '__main__':
     criterion = nn.CrossEntropyLoss()
     
     # Chossing the model
-    # model = SimpleCNN().to(device)
     model = ProposedCNN().to(device)
     # model = ResNet(ResidualBlock, [2, 2, 2], num_classes=4).to(device)
 

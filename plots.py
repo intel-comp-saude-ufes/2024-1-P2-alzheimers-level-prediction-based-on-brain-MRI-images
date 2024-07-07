@@ -5,6 +5,19 @@ from sklearn.preprocessing import label_binarize
 
 
 def plot_confusion_matrix(y_true, y_pred, class_names, save_plot=False):
+    """
+    Plots the confusion matrix
+
+    INPUT:
+        y_true (list): List of true labels
+        y_pred (list): List of predicted labels
+        class_names (list): List of class names
+        save_plot (bool): Flag to save the plot in a .png file
+
+    OUTPUT:
+        None
+    """
+
     # Calculates the confusion matrix
     cm = confusion_matrix(y_true, y_pred)
 
@@ -23,8 +36,20 @@ def plot_confusion_matrix(y_true, y_pred, class_names, save_plot=False):
         plt.show()
 
 
-
 def plot_roc_curve(y_true, y_probs, class_names, save_plot=False):
+    """
+    Plots the ROC curve
+
+    INPUT:
+        y_true (list): List of true labels
+        y_probs (list): List of predicted probabilities
+        class_names (list): List of class names
+        save_plot (bool): Flag to save the plot in a .png file
+
+    OUTPUT:
+        None
+    """
+
     # Binarizing the labels
     y_true_binarized = label_binarize(y_true, classes=[0, 1, 2, 3])
 

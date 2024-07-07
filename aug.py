@@ -4,6 +4,7 @@ import numpy as np
 import imgaug.augmenters as iaa
 import shutil
 
+
 def get_mri_augmentation_sequence():
     """
     Returns the sequence of augmentations suitable for brain MRI images

@@ -4,14 +4,33 @@ import torch
 from torchvision import transforms
 from torch.utils.data import DataLoader, Subset
 import torch.nn as nn
-
 from alzheimer_dataset import AlzheimerDataset
 from proposed_cnn import ProposedCNN
 from train import train_model
 from test import test_model
 from plots import plot_confusion_matrix, plot_roc_curve
 
+
 def cross_validate_model(device, dataset, model_class, criterion, optimizer_class, num_epochs=25, n_splits=5):
+    """
+    Perform cross-validation on a given model and dataset
+
+    INPUT:
+        device (torch.device): Device to run the model on
+        dataset (AlzheimerDataset): Dataset to perform cross-validation on
+        model_class (torch.nn.Module): Model class to instantiate
+        criterion (torch.nn.Module): Loss function
+        optimizer_class (torch.optim.Optimizer): Optimizer class to instantiate
+        num_epochs (int): Number of epochs to train the model
+        n_splits (int): Number of folds for cross-validation
+
+    OUTPUT:
+        all_labels (list): List of true labels for all folds
+        all_preds (list): List of predicted labels for all folds
+        all_probs (list): List of predicted probabilities for all folds
+        accuracys (list): List of accuracies for all folds
+    """
+
     all_labels = []
     all_preds = []
     all_probs = []

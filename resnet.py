@@ -1,10 +1,10 @@
 import torch.nn as nn
 
-# Definição da camada convolucional 3x3
+# Definition of the 3x3 convolutional layer
 def conv3x3(in_channels, out_channels, stride=1):
     return nn.Conv2d(in_channels, out_channels, kernel_size=3, stride=stride, padding=1, bias=False)
 
-# Definição do bloco residual
+# Residual block definition
 class ResidualBlock(nn.Module):
     def __init__(self, in_channels, out_channels, stride=1, downsample=None):
         super(ResidualBlock, self).__init__()
@@ -28,7 +28,8 @@ class ResidualBlock(nn.Module):
         out = self.relu(out)
         return out
 
-# Definição do modelo ResNet
+
+# ResNet model definition
 class ResNet(nn.Module):
     def __init__(self, block, layers, num_classes=10):
         super(ResNet, self).__init__()
