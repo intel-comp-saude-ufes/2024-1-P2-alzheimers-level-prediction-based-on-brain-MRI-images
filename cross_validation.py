@@ -6,8 +6,7 @@ from torch.utils.data import DataLoader, Subset
 import torch.nn as nn
 
 from alzheimer_dataset import AlzheimerDataset
-from simple_cnn import SimpleCNN
-from advanced_cnn import AdvancedCNN
+from proposed_cnn import ProposedCNN
 from train import train_model
 from test import test_model
 from plots import plot_confusion_matrix, plot_roc_curve
@@ -81,7 +80,7 @@ if __name__ == '__main__':
     # Optimizer class
     optimizer = torch.optim.Adam
     # Model class
-    model = AdvancedCNN
+    model = ProposedCNN
     # Number of epochs
     num_epochs = 20
     # NUmber of folders

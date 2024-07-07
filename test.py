@@ -3,7 +3,7 @@ from torchvision import transforms
 from torch.utils.data import DataLoader
 import torch.nn as nn
 
-from advanced_cnn import AdvancedCNN
+from proposed_cnn import ProposedCNN
 from alzheimer_dataset import AlzheimerDataset
 from plots import plot_confusion_matrix, plot_roc_curve
 
@@ -73,7 +73,7 @@ if __name__ == '__main__':
     criterion = nn.CrossEntropyLoss()
 
     # load the pre-trained model
-    model = AdvancedCNN().to(device)
+    model = ProposedCNN().to(device)
     model.load_state_dict(torch.load("model.pth"))
 
     print("\nTesting...")

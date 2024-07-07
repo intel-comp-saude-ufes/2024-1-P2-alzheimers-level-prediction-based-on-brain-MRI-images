@@ -2,9 +2,9 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-class AdvancedCNN(nn.Module):
+class ProposedCNN(nn.Module):
     def __init__(self):
-        super(AdvancedCNN, self).__init__()
+        super(ProposedCNN, self).__init__()
         
         # First convolutional layer
         self.conv1 = nn.Conv2d(1, 32, kernel_size=3, stride=1, padding=1)

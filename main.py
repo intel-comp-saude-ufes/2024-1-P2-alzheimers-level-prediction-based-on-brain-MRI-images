@@ -7,8 +7,7 @@ from glob import glob
 import numpy as np
 
 from alzheimer_dataset import AlzheimerDataset
-from simple_cnn import SimpleCNN
-from advanced_cnn import AdvancedCNN
+from proposed_cnn import ProposedCNN
 from resnet import ResNet, ResidualBlock
 from train import train_model
 from test import test_model
@@ -52,7 +51,7 @@ if __name__ == '__main__':
     
     # Chossing the model
     # model = SimpleCNN().to(device)
-    model = AdvancedCNN().to(device)
+    model = ProposedCNN().to(device)
     # model = ResNet(ResidualBlock, [2, 2, 2], num_classes=4).to(device)
 
     # Optimizer
