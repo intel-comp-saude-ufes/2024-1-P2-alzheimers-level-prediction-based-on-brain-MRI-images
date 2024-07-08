@@ -2,6 +2,7 @@ import torch
 from torchvision import transforms
 from torch.utils.data import DataLoader
 import torch.nn as nn
+import sklearn.metrics as metrics
 
 from advanced_cnn import AdvancedCNN
 from alzheimer_dataset import AlzheimerDataset
@@ -61,21 +62,21 @@ if __name__ == '__main__':
     transform = transforms.Compose([
         transforms.Resize((224, 224)),
         transforms.ToTensor(),
-        transforms.Normalize(mean=[0.5], std=[0.5])
+        transforms.Normalize(mean=[0.485], std=[0.229])
     ])
 
     # Loading training data
-    test_dataset = AlzheimerDataset('./data/test', transform=transform)
+    test_dataset = AlzheimerDataset('./Data/test', transform=transform)
 
     # transform dataset in a DataLoader
-    test_loader = DataLoader(test_dataset, batch_size=32, shuffle=True)
+    test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
 
     # Defining the loss function and optimizer
     criterion = nn.CrossEntropyLoss()
 
     # load the pre-trained model
     model = AdvancedCNN().to(device)
-    model.load_state_dict(torch.load("model.pth"))
+    model.load_state_dict(torch.load("best_checkpoint.pth"))
 
     print("\nTesting...")
 
@@ -87,3 +88,7 @@ if __name__ == '__main__':
     class_names = ['non-demented', 'very-mild-demented', 'mild-demented', 'moderate-demented']
     plot_confusion_matrix(all_labels, all_preds, class_names)
     plot_roc_curve(all_labels, all_probs, class_names)
+
+    # Calculate all metrics (Acuracy, Recall, Precision and F1-score)
+    results = metrics.classification_report(all_labels, all_preds, target_names=class_names)
+    print(results)

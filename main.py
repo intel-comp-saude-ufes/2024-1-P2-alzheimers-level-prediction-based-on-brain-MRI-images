@@ -33,29 +33,25 @@ if __name__ == '__main__':
     tol                 = 0.05
 
     # Defining the data path
-    # train_data_path = "./data/train"
-    train_data_path = "./data-OAS/train"
-    test_data_path = "./data-OAS/test"
+    train_data_path = "./Data/train_augmented_balanced"
+    test_data_path  = "./Data/test"
 
     # Defining train transformations
     train_transform = transforms.Compose([
-        # transforms.Grayscale(num_output_channels=3),
+        transforms.Grayscale(num_output_channels=3),
         transforms.Resize((224, 224)),
-        # np.array,
-        # get_mri_augmentation_sequence().augment_image,        # AUGMENTATION
-        # np.copy,
         transforms.ToTensor(),
-        # transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]) # when using 3 channels
-        transforms.Normalize(mean=[0.485], std=[0.229])
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]) # when using 3 channels
+        # transforms.Normalize(mean=[0.485], std=[0.229])
     ])
 
     # Defining transformations
     test_transform = transforms.Compose([
-        # transforms.Grayscale(num_output_channels=3),
+        transforms.Grayscale(num_output_channels=3),
         transforms.Resize((224, 224)),
         transforms.ToTensor(),
-        # transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
-        transforms.Normalize(mean=[0.485], std=[0.229])
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+        # transforms.Normalize(mean=[0.485], std=[0.229])
     ])
 
     # Loading training data
@@ -70,17 +66,14 @@ if __name__ == '__main__':
     criterion = nn.CrossEntropyLoss()
     
     # Chossing the model
-    # model = SimpleCNN().to(device)
-    model = AdvancedCNN().to(device)
-    # model = ResNet(ResidualBlock, [2, 2, 2], num_classes=4).to(device)
-    # model = models.resnet18().to(device)                                            # sem pesos pre treinados
-    # model = models.resnet18(weights=models.ResNet18_Weights.DEFAULT).to(device)     # com pesos pre treinados
+    # model = AdvancedCNN().to(device)
+    model = models.resnet50(weights=models.ResNet50_Weights.DEFAULT).to(device)
 
     # Optimizer
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
     
     #Training the model
-    train_model(device, model, train_loader, test_loader, criterion, optimizer, num_epochs, early_stopping=True, n_iter_no_change=n_iter_no_change, tol=tol, validate=True, plot_loss_curve=True)
+    train_model(device, model, train_loader, None, criterion, optimizer, num_epochs, early_stopping=True, n_iter_no_change=n_iter_no_change, tol=tol, validate=False, plot_loss_curve=True)
     
     # Saving the trained model
     torch.save(model.state_dict(), 'model.pth')
@@ -94,8 +87,8 @@ if __name__ == '__main__':
 
     # Plot confusion matrix and ROC curve
     class_names = ['non-demented', 'very-mild-demented', 'mild-demented', 'moderate-demented']
-    plot_confusion_matrix(all_labels, all_preds, class_names, save_plot=True)
-    plot_roc_curve(all_labels, all_probs, class_names, save_plot=True)
+    plot_confusion_matrix(all_labels, all_preds, class_names, save_plot=False)
+    plot_roc_curve(all_labels, all_probs, class_names, save_plot=False)
 
     # Calculate all metrics (Acuracy, Recall, Precision and F1-score)
     results = metrics.classification_report(all_labels, all_preds, target_names=class_names)

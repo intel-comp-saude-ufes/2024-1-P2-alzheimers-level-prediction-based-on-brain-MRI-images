@@ -99,7 +99,7 @@ def balance_classes_with_augmentation(input_dir, output_dir):
             class_counts[category] = len(os.listdir(category_path))
 
     # Determinar o número máximo de imagens em qualquer classe
-    max_count = int( max(class_counts.values()) * 5 )
+    max_count = int( max(class_counts.values()) * 3 )
 
     # Aplicar augmentação para balancear as classes
     for category in class_counts:
@@ -145,8 +145,9 @@ def balance_classes_with_augmentation(input_dir, output_dir):
 
 if __name__ == '__main__':
     # Caminhos de entrada e saída
-    input_directory = "data/train"
-    output_directory = "data_augmented_balanced"
+    input_directory = "Data/cross-validation2_augmented/Folder5/train"
+    output_directory = "Data/cross-validation2_augmented/Folder5/train"
 
     # Aplicar augmentação e salvar as imagens
-    balance_classes_with_augmentation(input_directory, output_directory)
+    # balance_classes_with_augmentation(input_directory, output_directory)
+    augment_and_save_images(input_directory, output_directory, 3)

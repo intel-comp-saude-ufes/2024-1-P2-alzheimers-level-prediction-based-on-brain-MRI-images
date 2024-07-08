@@ -26,6 +26,7 @@ class AdvancedCNN(nn.Module):
         # Fully connected layers
         self.fc1 = nn.Linear(256 * 14 * 14, 512)  # Adjust dimensions as needed
         self.fc2 = nn.Linear(512, 128)
+        # self.fc3 = nn.Linear(128, 3)  # 3 classes: non-demented, very mild demented, mild demented
         self.fc3 = nn.Linear(128, 4)  # 4 classes: non-demented, very mild demented, mild demented, demented
     
 

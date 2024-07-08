@@ -96,7 +96,7 @@ def train_model(device, model, train_loader, val_loader, criterion, optimizer, n
         # Accuracy plot
         plt.subplot(1, 2, 1)
         plt.plot(epochs_accuracies_train, label="train")
-        plt.plot(epochs_accuracies_val, label="test")
+        # plt.plot(epochs_accuracies_val, label="test")
         plt.xlabel("epoch")
         plt.ylabel("accuracy")
         plt.legend()
@@ -105,7 +105,7 @@ def train_model(device, model, train_loader, val_loader, criterion, optimizer, n
         # Loss plot
         plt.subplot(1, 2, 2)
         plt.plot(epochs_losses_train, label="train")
-        plt.plot(epochs_losses_val, label="test")
+        # plt.plot(epochs_losses_val, label="test")
         plt.xlabel("epoch")
         plt.ylabel("loss")
         plt.legend()
