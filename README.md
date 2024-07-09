@@ -51,6 +51,36 @@ python app.py
 
 
 ## Results
+
+<div style="display: flex; justify-content: center;">
+  <table>
+    <tr>
+      <td align="center">
+        <img src="media/confusion_matrix_test_train_proposed_CNN.png" alt="Confusion matrix for proposed CNN teste with original dataset" width="500"/>
+        <br/>
+        <b>Proposed CNN teste with original dataset</b>
+      </td>
+      <td align="center">
+        <img src="media/confusion_matrix_test_train_augmented_proposed_CNN.png" alt="Confusion matrix for proposed CNN teste with augmented dataset" width="500"/>
+        <br/>
+        <b>Proposed CNN teste with augmented dataset</b>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <img src="media/roc_train_test_proposed_CNN.png" alt="ROC curve for proposed CNN teste with original dataset" width="500"/>
+        <br/>
+        <b>Proposed CNN teste with original dataset</b>
+      </td>
+      <td align="center">
+        <img src="media/roc_train_test_augmented_proposed_CNN.png" alt="ROC curve for proposed CNN teste with augmented dataset" width="500"/>
+        <br/>
+        <b>Proposed CNN teste with augmented dataset</b>
+      </td>
+    </tr>
+  </table>
+</div>
+
 > A video sumarizing the hole project can be found [here](https://www.youtube.com/watch?v=izGwDsrQ1eQ)
 
 > The full article about this project can be found [here](https://www.youtube.com/watch?v=izGwDsrQ1eQ)
