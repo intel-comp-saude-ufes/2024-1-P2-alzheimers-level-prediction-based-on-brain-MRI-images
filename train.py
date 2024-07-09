@@ -1,12 +1,31 @@
 import torch
 from matplotlib import pyplot as plt
 import numpy as np
-
 from test import test_model
-
 # from torch.utils.tensorboard import SummaryWriter
 
 def train_model(device, model, train_loader, val_loader, criterion, optimizer, num_epochs=25, early_stopping=False, n_iter_no_change=3, tol=0.1, validate=False, plot_loss_curve=False):
+    """
+    Trains the model
+
+    INPUT:
+        device (torch.device): Device to run the model on
+        model (torch.nn.Module): Model to train
+        train_loader (torch.utils.data.DataLoader): DataLoader for the training data
+        val_loader (torch.utils.data.DataLoader): DataLoader for the validation data
+        criterion (torch.nn.Module): Loss function
+        optimizer (torch.optim.Optimizer): Optimizer
+        num_epochs (int): Number of epochs to train the model
+        early_stopping (bool): Flag to activate early stopping
+        n_iter_no_change (int): Number of iterations with no improvement to wait before stopping
+        tol (float): Tolerance to consider an improvement
+        validate (bool): Flag to activate validation
+        plot_loss_curve (bool): Flag to plot the loss curve
+
+    OUTPUT:
+        None
+    """
+
     epochs_losses = []
     n_iter_no_change_actual = 0
     best_loss = np.inf

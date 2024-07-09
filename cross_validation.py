@@ -1,44 +1,64 @@
 import numpy as np
 from sklearn.model_selection import StratifiedKFold
 import torch
-from torchvision import transforms
+from torchvision import transforms, models
 from torch.utils.data import DataLoader, Subset
 import torch.nn as nn
-
 from alzheimer_dataset import AlzheimerDataset
-from simple_cnn import SimpleCNN
-from advanced_cnn import AdvancedCNN
+from proposed_cnn import ProposedCNN
 from train import train_model
 from test import test_model
 from plots import plot_confusion_matrix, plot_roc_curve
 
+
 def cross_validate_model(device, dataset, model_class, criterion, optimizer_class, num_epochs=25, n_splits=5):
-    # Sets cross validation with n_splits folds
-    skf = StratifiedKFold(n_splits=n_splits)
+    """
+    Perform cross-validation on a given model and dataset
+
+    INPUT:
+        device (torch.device): Device to run the model on
+        dataset (AlzheimerDataset): Dataset to perform cross-validation on
+        model_class (torch.nn.Module): Model class to instantiate
+        criterion (torch.nn.Module): Loss function
+        optimizer_class (torch.optim.Optimizer): Optimizer class to instantiate
+        num_epochs (int): Number of epochs to train the model
+        n_splits (int): Number of folds for cross-validation
+
+    OUTPUT:
+        all_labels (list): List of true labels for all folds
+        all_preds (list): List of predicted labels for all folds
+        all_probs (list): List of predicted probabilities for all folds
+        accuracys (list): List of accuracies for all folds
+    """
+
     all_labels = []
     all_preds = []
     all_probs = []
     accuracys = []
+    
     fold = 1
     
     # Splits data into training and validation for each fold
-    for train_idx, val_idx in skf.split(dataset.image_paths, dataset.labels):
+    while fold <= n_splits:
         print(f'\nFold {fold}/{n_splits}')
+
+        # Get the fold dir
+        fold_dir = f'./cross_validation/Folder{fold}'
         
         # Creates the training and validation subsets
-        train_subset = Subset(dataset, train_idx)
-        val_subset = Subset(dataset, val_idx)
+        train_subset = AlzheimerDataset(f'{fold_dir}/train', transform=transform)
+        val_subset = AlzheimerDataset(f'{fold_dir}/val', transform=transform)
         
         # Creates the trainig and validation loaders
         train_loader = DataLoader(train_subset, batch_size=32, shuffle=True)
-        val_loader = DataLoader(val_subset, batch_size=32, shuffle=False)
+        val_loader = DataLoader(val_subset, batch_size=32, shuffle=True)
         
         # Instantiates the model and optimizer
         model = model_class().to(device)
         optimizer = optimizer_class(model.parameters(), lr=0.001)
         
         # Train the model
-        train_model(device, model, train_loader, val_loader, criterion, optimizer, num_epochs, early_stopping=True, n_iter_no_change=5, tol=0.01, validate=True, plot_loss_curve=False)
+        train_model(device, model, train_loader, val_loader, criterion, optimizer, num_epochs, early_stopping=True, n_iter_no_change=3, tol=0.01, validate=True, plot_loss_curve=False)
         
         # Evaluate the model on the validation set again to get the confusion matrix and ROC curve
         accuracy, loss, labels, preds, probs = test_model(device, model, val_loader, criterion)
@@ -52,6 +72,8 @@ def cross_validate_model(device, dataset, model_class, criterion, optimizer_clas
         fold += 1
     
     return all_labels, all_preds, all_probs, accuracys
+
+
 
 if __name__ == '__main__':
     
@@ -69,14 +91,16 @@ if __name__ == '__main__':
     ])
 
     # Loading training data
-    train_dataset = AlzheimerDataset('./data_augmented', transform=transform)
+    train_dataset = AlzheimerDataset('./coss_validation', transform=transform)
+    # train_dataset = AlzheimerDataset('./coss_validation_augmented', transform=transform)
 
     # Defining the loss function and optimizer
     criterion = nn.CrossEntropyLoss()
     # Optimizer class
     optimizer = torch.optim.Adam
     # Model class
-    model = AdvancedCNN
+    model = ProposedCNN
+    # model = models.resnet50(weights=models.ResNet50_Weights.DEFAULT)
     # Number of epochs
     num_epochs = 20
     # NUmber of folders

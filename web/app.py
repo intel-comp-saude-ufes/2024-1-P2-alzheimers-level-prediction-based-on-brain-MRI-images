@@ -9,7 +9,7 @@ import torch
 from PIL import Image
 from io import BytesIO
 
-from advanced_cnn import AdvancedCNN
+from proposed_cnn import ProposedCNN
 
 app = Flask(__name__)
 
@@ -24,7 +24,7 @@ transform = transforms.Compose([
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # Loading the trained model
-model = AdvancedCNN()
+model = ProposedCNN()
 model.load_state_dict(torch.load('../model.pth', map_location=torch.device(device)))
 model.eval() # Sets the model in evaluation mode
 

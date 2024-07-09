@@ -1,15 +1,12 @@
 import torch
-from torchvision import transforms
+from torchvision import transforms, models
 from torch.utils.data import DataLoader
 import torch.nn as nn
 import matplotlib.pyplot as plt
 from glob import glob
 import numpy as np
-
 from alzheimer_dataset import AlzheimerDataset
-from simple_cnn import SimpleCNN
-from advanced_cnn import AdvancedCNN
-from resnet import ResNet, ResidualBlock
+from proposed_cnn import ProposedCNN
 from train import train_model
 from test import test_model
 from plots import plot_confusion_matrix, plot_roc_curve
@@ -32,16 +29,13 @@ if __name__ == '__main__':
     tol                 = 0.01
 
     # Defining the data path
-    # train_data_path = "./data/train"
-    train_data_path = "./data_augmented"
+    train_data_path = "./data/train"
+    # train_data_path = "./train_augmented"
     test_data_path = "./data/test"
 
-    # Defining train transformations (USING AUGMENTATION)
+    # Defining train transformations
     train_transform = transforms.Compose([
         transforms.Resize((224, 224)),
-        np.array,
-        get_mri_augmentation_sequence().augment_image,
-        np.copy,
         transforms.ToTensor(),
         transforms.Normalize(mean=[0.5], std=[0.5])
     ])
@@ -54,9 +48,8 @@ if __name__ == '__main__':
     criterion = nn.CrossEntropyLoss()
     
     # Chossing the model
-    # model = SimpleCNN().to(device)
-    # model = AdvancedCNN().to(device)
-    model = ResNet(ResidualBlock, [2, 2, 2], num_classes=4).to(device)
+    model = ProposedCNN().to(device)
+    # model = models.resnet50(weights=models.ResNet50_Weights.DEFAULT).to(device)
 
     # Optimizer
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)

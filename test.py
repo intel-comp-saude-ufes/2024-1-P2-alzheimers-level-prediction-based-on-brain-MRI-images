@@ -2,12 +2,29 @@ import torch
 from torchvision import transforms
 from torch.utils.data import DataLoader
 import torch.nn as nn
-
-from advanced_cnn import AdvancedCNN
+from proposed_cnn import ProposedCNN
 from alzheimer_dataset import AlzheimerDataset
 from plots import plot_confusion_matrix, plot_roc_curve
 
+
 def test_model(device, model, test_loader, criterion):
+    """
+    Tests the model on a test data set
+
+    INPUT:
+        device (torch.device): Device to run the model on
+        model (torch.nn.Module): Model to test
+        test_loader (torch.utils.data.DataLoader): DataLoader for the test data
+        criterion (torch.nn.Module): Loss function
+
+    OUTPUT:
+        test_accuracy (float): Test accuracy
+        test_loss (float): Test loss
+        all_labels (list): List of true labels
+        all_preds (list): List of predicted labels
+        all_probs (list): List of predicted probabilities
+    """
+
     # Configures the model for evaluation mode
     model.eval()
 
@@ -73,7 +90,7 @@ if __name__ == '__main__':
     criterion = nn.CrossEntropyLoss()
 
     # load the pre-trained model
-    model = AdvancedCNN().to(device)
+    model = ProposedCNN().to(device)
     model.load_state_dict(torch.load("model.pth"))
 
     print("\nTesting...")
