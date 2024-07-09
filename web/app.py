@@ -15,10 +15,12 @@ app = Flask(__name__)
 
 # Defining transformations for image preprocessing (same as in main.py)
 transform = transforms.Compose([
-    transforms.Resize((224, 224)),
-    transforms.ToTensor(),
-    transforms.Normalize(mean=[0.5], std=[0.5])
-])
+        # transforms.Grayscale(num_output_channels=3),                          # when using a model with input for 3 channels
+        transforms.Resize((224, 224)),
+        transforms.ToTensor(),
+        # transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])    # when using a model with input for 3 channels
+        transforms.Normalize(mean=[0.485], std=[0.229])
+    ])
 
 # Checking if the GPU is available
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
