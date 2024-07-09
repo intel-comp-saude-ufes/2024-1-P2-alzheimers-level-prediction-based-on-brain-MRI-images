@@ -1,7 +1,7 @@
 import numpy as np
 from sklearn.model_selection import StratifiedKFold
 import torch
-from torchvision import transforms
+from torchvision import transforms, models
 from torch.utils.data import DataLoader, Subset
 import torch.nn as nn
 from alzheimer_dataset import AlzheimerDataset
@@ -100,6 +100,7 @@ if __name__ == '__main__':
     optimizer = torch.optim.Adam
     # Model class
     model = ProposedCNN
+    # model = models.resnet50(weights=models.ResNet50_Weights.DEFAULT)
     # Number of epochs
     num_epochs = 20
     # NUmber of folders

@@ -1,5 +1,5 @@
 import torch
-from torchvision import transforms
+from torchvision import transforms, models
 from torch.utils.data import DataLoader
 import torch.nn as nn
 import matplotlib.pyplot as plt
@@ -7,7 +7,6 @@ from glob import glob
 import numpy as np
 from alzheimer_dataset import AlzheimerDataset
 from proposed_cnn import ProposedCNN
-from resnet import ResNet, ResidualBlock
 from train import train_model
 from test import test_model
 from plots import plot_confusion_matrix, plot_roc_curve
@@ -50,7 +49,7 @@ if __name__ == '__main__':
     
     # Chossing the model
     model = ProposedCNN().to(device)
-    # model = ResNet(ResidualBlock, [2, 2, 2], num_classes=4).to(device)
+    # model = models.resnet50(weights=models.ResNet50_Weights.DEFAULT).to(device)
 
     # Optimizer
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
