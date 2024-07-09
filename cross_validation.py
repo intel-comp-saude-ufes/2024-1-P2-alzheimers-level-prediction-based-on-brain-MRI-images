@@ -1,8 +1,7 @@
 import numpy as np
-from sklearn.model_selection import StratifiedKFold
 import torch
 from torchvision import transforms, models
-from torch.utils.data import DataLoader, Subset
+from torch.utils.data import DataLoader
 import torch.nn as nn
 from alzheimer_dataset import AlzheimerDataset
 from proposed_cnn import ProposedCNN
@@ -11,13 +10,14 @@ from test import test_model
 from plots import plot_confusion_matrix, plot_roc_curve
 
 
-def cross_validate_model(device, dataset, model_class, criterion, optimizer_class, num_epochs=25, n_splits=5):
+def cross_validate_model(device, dataset_folder, model_class, model_weights, criterion, optimizer_class, num_epochs=25, n_splits=5):
     """
     Perform cross-validation on a given model and dataset
 
     INPUT:
         device (torch.device): Device to run the model on
-        dataset (AlzheimerDataset): Dataset to perform cross-validation on
+        dataset_folder (str): Path to the folders to perform cross-validation
+        model_weights (torchvision.models.Weights): Pretrained weights for the model (e.g., models.ResNet50_Weights.DEFAULT)
         model_class (torch.nn.Module): Model class to instantiate
         criterion (torch.nn.Module): Loss function
         optimizer_class (torch.optim.Optimizer): Optimizer class to instantiate
@@ -43,7 +43,7 @@ def cross_validate_model(device, dataset, model_class, criterion, optimizer_clas
         print(f'\nFold {fold}/{n_splits}')
 
         # Get the fold dir
-        fold_dir = f'./cross_validation/Folder{fold}'
+        fold_dir = f'./{dataset_folder}/Folder{fold}'
         
         # Creates the training and validation subsets
         train_subset = AlzheimerDataset(f'{fold_dir}/train', transform=transform)
@@ -54,7 +54,11 @@ def cross_validate_model(device, dataset, model_class, criterion, optimizer_clas
         val_loader = DataLoader(val_subset, batch_size=32, shuffle=True)
         
         # Instantiates the model and optimizer
-        model = model_class().to(device)
+        if model_weights:
+            model = model_class(model_weights).to(device)
+        else:
+            model = model_class().to(device)
+
         optimizer = optimizer_class(model.parameters(), lr=0.001)
         
         # Train the model
@@ -90,9 +94,9 @@ if __name__ == '__main__':
         transforms.Normalize(mean=[0.5], std=[0.5])
     ])
 
-    # Loading training data
-    train_dataset = AlzheimerDataset('./coss_validation', transform=transform)
-    # train_dataset = AlzheimerDataset('./coss_validation_augmented', transform=transform)
+    # dataset folder name
+    dataset_folder = './Data/cross_validation'
+    # dataset_folder = './Data/cross_validation_augmented'
 
     # Defining the loss function and optimizer
     criterion = nn.CrossEntropyLoss()
@@ -100,7 +104,9 @@ if __name__ == '__main__':
     optimizer = torch.optim.Adam
     # Model class
     model = ProposedCNN
-    # model = models.resnet50(weights=models.ResNet50_Weights.DEFAULT)
+    model_weights = None
+    # model = models.resnet50                           # for ResNet50
+    # model_weights = models.ResNet50_Weights.DEFAULT   # pre-trained weights for ResNet50
     # Number of epochs
     num_epochs = 20
     # NUmber of folders
@@ -108,7 +114,7 @@ if __name__ == '__main__':
 
     # Perform cross validation
     all_labels, all_preds, all_probs, accuracys = cross_validate_model(
-        device, train_dataset, model, criterion, optimizer, num_epochs=num_epochs, n_splits=num_splits
+        device, dataset_folder, model, model_weights, criterion, optimizer, num_epochs=num_epochs, n_splits=num_splits
     )
 
     # Convertendo a lista para um array NumPy

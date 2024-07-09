@@ -2,6 +2,7 @@ import torch
 from torchvision import transforms
 from torch.utils.data import DataLoader
 import torch.nn as nn
+import sklearn.metrics as metrics
 from proposed_cnn import ProposedCNN
 from alzheimer_dataset import AlzheimerDataset
 from plots import plot_confusion_matrix, plot_roc_curve
@@ -100,6 +101,10 @@ if __name__ == '__main__':
     print(f'\nTest Loss: {test_loss:.4f}, Accuracy: {test_accuracy:.4f}')
 
     # Plot confusion matrix and ROC curve
-    class_names = ['non-demented', 'very-mild-demented', 'mild-demented', 'moderate-demented']
-    plot_confusion_matrix(all_labels, all_preds, class_names)
-    plot_roc_curve(all_labels, all_probs, class_names)
+    class_names = ['Non', 'Very mild', 'Mild', 'Moderate']
+    plot_confusion_matrix(all_labels, all_preds, class_names, save_plot=True)
+    plot_roc_curve(all_labels, all_probs, class_names, save_plot=True)
+
+    # Calculate all metrics (Acuracy, Recall, Precision and F1-score)
+    results = metrics.classification_report(all_labels, all_preds, target_names=class_names)
+    print(results)

@@ -1,16 +1,14 @@
 import torch
-from torchvision import transforms, models
+from torchvision import transforms
 from torch.utils.data import DataLoader
 import torch.nn as nn
-import matplotlib.pyplot as plt
-from glob import glob
-import numpy as np
+import sklearn.metrics as metrics
 from alzheimer_dataset import AlzheimerDataset
 from proposed_cnn import ProposedCNN
 from train import train_model
 from test import test_model
 from plots import plot_confusion_matrix, plot_roc_curve
-from aug import get_mri_augmentation_sequence
+
 
 
 if __name__ == '__main__':
@@ -26,7 +24,7 @@ if __name__ == '__main__':
     batch_size          = 32
     num_epochs          = 20
     n_iter_no_change    = 3
-    tol                 = 0.01
+    tol                 = 0.05
 
     # Defining the data path
     train_data_path = "./data/train"
@@ -35,9 +33,11 @@ if __name__ == '__main__':
 
     # Defining train transformations
     train_transform = transforms.Compose([
+        # transforms.Grayscale(num_output_channels=3),                          # when using a model with input for 3 channels
         transforms.Resize((224, 224)),
         transforms.ToTensor(),
-        transforms.Normalize(mean=[0.5], std=[0.5])
+        # transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])    # when using a model with input for 3 channels
+        transforms.Normalize(mean=[0.485], std=[0.229])
     ])
 
     # Loading training data
@@ -64,10 +64,13 @@ if __name__ == '__main__':
 
     # Defining transformations
     test_transform = transforms.Compose([
+        # transforms.Grayscale(num_output_channels=3),                          # when using a model with input for 3 channels
         transforms.Resize((224, 224)),
         transforms.ToTensor(),
-        transforms.Normalize(mean=[0.5], std=[0.5])
+        # transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])    # when using a model with input for 3 channels
+        transforms.Normalize(mean=[0.485], std=[0.229])
     ])
+
 
     # Loading test data
     test_dataset = AlzheimerDataset(test_data_path, transform=test_transform)
@@ -79,6 +82,10 @@ if __name__ == '__main__':
     print(f'\nTest Loss: {test_loss:.4f}, Accuracy: {test_accuracy:.4f}')
 
     # Plot confusion matrix and ROC curve
-    class_names = ['non-demented', 'very-mild-demented', 'mild-demented', 'moderate-demented']
+    class_names = ['Non', 'Very mild', 'Mild', 'Moderate']
     plot_confusion_matrix(all_labels, all_preds, class_names, save_plot=True)
     plot_roc_curve(all_labels, all_probs, class_names, save_plot=True)
+
+    # Calculate all metrics (Acuracy, Recall, Precision and F1-score)
+    results = metrics.classification_report(all_labels, all_preds, target_names=class_names)
+    print(results)

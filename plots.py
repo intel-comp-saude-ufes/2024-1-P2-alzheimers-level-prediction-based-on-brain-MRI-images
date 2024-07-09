@@ -26,10 +26,25 @@ def plot_confusion_matrix(y_true, y_pred, class_names, save_plot=False):
 
     # Create a confusion matrix display
     disp = ConfusionMatrixDisplay(confusion_matrix=cm_normalized, display_labels=class_names)
-    
+
     # Plot the confusion matrix
-    disp.plot(cmap=plt.cm.Blues, values_format='.2f')
-    plt.xticks(rotation=90)
+    disp.plot(cmap=plt.cm.Blues, values_format='.2f', colorbar=False)
+    plt.xticks(fontsize=16)
+    plt.yticks(fontsize=16)
+    plt.title('Confusion Matrix', fontsize=20)
+    plt.xlabel('Predicted Label', fontsize=18, labelpad=16)
+    plt.ylabel('True Label', fontsize=18)
+
+    # Adjust font size of numbers inside cells
+    for text in disp.text_.ravel():
+        text.set_fontsize(18)
+
+    # Adjust the colorbar
+    cbar = plt.colorbar(disp.im_, ax=plt.gca())
+    cbar.ax.tick_params(labelsize=18)  # Adjust color bar font size
+
+    plt.tight_layout()  # Adjust layout to avoid cutting labels
+
     if save_plot:
         plt.savefig('confusion_matrix.png')
     else:
@@ -78,9 +93,11 @@ def plot_roc_curve(y_true, y_probs, class_names, save_plot=False):
     plt.ylim([0.0, 1.05])
 
     # Define labels, title and legend
-    plt.xlabel('False Positive Rate')
-    plt.ylabel('True Positive Rate')
-    plt.title('Receiver Operating Characteristic')
+    plt.xlabel('False Positive Rate', fontsize=12)
+    plt.ylabel('True Positive Rate', fontsize=12)
+    plt.xticks(fontsize=12)
+    plt.yticks(fontsize=12)
+    plt.title('Receiver Operating Characteristic', fontsize=14)
     plt.legend(loc="lower right")
     if save_plot:
         plt.savefig('roc_curve.png') 

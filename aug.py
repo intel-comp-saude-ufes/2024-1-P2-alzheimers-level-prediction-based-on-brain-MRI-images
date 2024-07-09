@@ -2,7 +2,6 @@ import os
 from PIL import Image
 import numpy as np
 import imgaug.augmenters as iaa
-import shutil
 
 
 def get_mri_augmentation_sequence():
