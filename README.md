@@ -52,6 +52,8 @@ python app.py
 
 ## Results
 
+The numbers in the figures are in percentage
+
 <div style="display: flex; justify-content: center;">
   <table>
     <tr>
