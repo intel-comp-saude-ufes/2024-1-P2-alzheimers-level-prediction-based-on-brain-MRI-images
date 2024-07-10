@@ -81,9 +81,9 @@ python app.py
   </table>
 </div>
 
-> A video sumarizing the hole project can be found [here](https://youtu.be/-gfCNyzsK3s)
+> A video sumarizing the hole project can be found [here](https://youtu.be/BeSnPn9pk00)
 
-> The full article about this project can be found [here](https://www.youtube.com/watch?v=izGwDsrQ1eQ)
+> The full article about this project can be found [here](https://drive.google.com/file/d/1ekWxY7Z-xIVdcyCoCvJ4tWM_8Un9U21P/view?usp=sharing)
 
 ## Contributing
 Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
